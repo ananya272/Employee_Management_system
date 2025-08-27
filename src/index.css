@@ -7,3 +7,21 @@
 body{
   background-color: #111;
 }
+#tasklist {
+  overflow-y: auto;
+  max-height: calc(100vh - 200px); /* Adjust 200px based on your header/footer height */
+  scrollbar-width: none; /* For Firefox */
+}
+
+#tasklist::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari and Opera */
+}
+input{
+  background-color: #fff;
+}
+textarea{
+  background-color: #fff;
+}
+::placeholder{
+  color: #aaa;
+}
