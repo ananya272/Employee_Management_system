@@ -1,8 +1,15 @@
 import React from 'react'
+import { getLocalStorage, setLocalStorage } from '../utils/localStorage'
 
-const AuthContext = () => {
+const AuthContext = ({children}) => {
+  // useEffect(()=>{
+  //   setLocalStorage()
+  //   getLocalStorage()
+  // },)
   return (
-    <div>AuthContext</div>
+    <div>
+      {children}
+    </div>
   )
 }
 
