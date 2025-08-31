@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
+import { AuthContext } from './context/AuthProvider'
 import Login from './components/Auth/Login'
 import EmployeeDashboard from './components/Dashboard/EmployeeDashboard'
 import AdminDashboard from './components/Dashboard/AdminDashboard'
@@ -7,24 +8,30 @@ import AdminDashboard from './components/Dashboard/AdminDashboard'
 const App = () => {
 
   const [user, setUser] = useState(null)
+  const authData = useContext(AuthContext)
+
+  useEffect(() => {
+    if(authData){
+      const loggedInUser = localStorage.getItem('LoggedInUser');
+      if(loggedInUser){
+        setUser(loggedInUser.role);
+      }
+      
+    }
+  }, [authData]);
 
   const handleLogin = (email, password) => {
     if (email === 'admin@me.com' && password === '123') {
       setUser('admin');
-    } else if (email === 'user@me.com' && password === '123') {
+      localStorage.setItem('LoggedInUser',JSON.stringify({role:'admin'}));
+    } else if (authData && authData.employees.find((e)=>e.email === email && e.password === password) ) {
       setUser('employee');
+      localStorage.setItem('LoggedInUser',JSON.stringify({role:'employee'}));
     } else {
       alert("Invalid Credentials");
     }
-  };
-  // useEffect(() => {
-  //   // Set initial data in localStorage
-  //   setLocalStorage();
-    
-  //   // Get and log the data from localStorage
-  //   const employees = getLocalStorage();
-  //   console.log('Employees data:', employees);
-  // }, []);
+  }
+
 
   return (
     <>
