@@ -11,31 +11,49 @@ const App = () => {
   const [loggedInUserData, setloggedInUserData] = useState(null);
   const authData = useContext(AuthContext)
 
-  // useEffect(() => {
-  //   if(authData){
-  //     const loggedInUser = localStorage.getItem('LoggedInUser');
-  //     if(loggedInUser){
-  //       setUser(loggedInUser.role);
-  //     }
-      
-  //   }
-  // }, [authData]);
+  useEffect(() => {
+    const loggedInUser = localStorage.getItem('LoggedInUser');
+    if(loggedInUser){
+      const userData = JSON.parse(loggedInUser);
+      setUser(userData.role);
+      setloggedInUserData(userData.data);
+    }
+  },[]);
 
   const handleLogin = (email, password) => {
-    if (email === 'admin@me.com' && password === '123') {
-      setUser({role:'admin'});
-      localStorage.setItem('LoggedInUser',JSON.stringify({role:'admin'}));
-    } else if (authData)  {
-      const employee=authData.employees.find((e)=>e.email === email && e.password === password)
-      if(employee){
+    // Check admin login
+    if (email === 'admin@example.com' && password === '123') {
+      const adminData = {
+        id: 1,
+        firstname: 'Admin',
+        email: 'admin@example.com',
+        role: 'admin'
+      };
+      setUser('admin');
+      setloggedInUserData(adminData);
+      localStorage.setItem('LoggedInUser', JSON.stringify({
+        role: 'admin',
+        data: adminData
+      }));
+      return;
+    }
+    
+    // Check employee login
+    if (authData && authData.employees) {
+      const employee = authData.employees.find(e => e.email === email && e.password === password);
+      if (employee) {
         setUser('employee');
         setloggedInUserData(employee);
-        localStorage.setItem('LoggedInUser',JSON.stringify({role:'employee'}));
+        localStorage.setItem('LoggedInUser', JSON.stringify({
+          role: 'employee',
+          data: employee
+        }));
+        return;
       }
-      
-    } else {
-      alert("Invalid Credentials");
     }
+    
+    // If we get here, credentials are invalid
+    alert("Invalid email or password. Please try again.");
   }
 
 

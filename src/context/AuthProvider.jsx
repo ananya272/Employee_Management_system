@@ -3,12 +3,21 @@ import { getLocalStorage, setLocalStorage } from '../utils/localStorage'
 
 export const AuthContext = createContext()
 const AuthProvider = ({children}) => {
-    const [userData, setUserData] = useState({ employees: null, admin: null })
+    const [userData, setUserData] = useState({ employees: [], admin: null })
 
     useEffect(() => {
-        setLocalStorage();
+        // Clear only if no data exists
+        if (!localStorage.getItem('employees')) {
+            setLocalStorage();
+        }
+        
+        // Get data from localStorage
         const { employees, admin } = getLocalStorage()
-        setUserData({ employees, admin })
+        console.log('Loaded employees:', employees); // Debug log
+        setUserData({ 
+            employees: employees || [],
+            admin: admin?.[0] || null
+        });
     }, [])
 
     return (
